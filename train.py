@@ -152,7 +152,7 @@ class DataTrainingArguments:
             require_version("datasets>=2.0.0",
                             "The streaming feature requires `datasets>=2.0.0`")
 
-        if self.dataset_name is None and self.train_file is None and self.validation_file is None:
+        if self.train_file is None and self.validation_file is None:
             raise ValueError(
                 "Need either a dataset name or a training/validation file.")
         else:
