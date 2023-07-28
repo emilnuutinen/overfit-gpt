@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --job-name=overfit_gpt
 #SBATCH --account=Project_2002820
-#SBATCH --time=00:15:00
-##SBATCH --nodes=4
+#SBATCH --time=36:00:00
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
-#SBATCH --mem=32G
-#SBATCH --partition=gputest
+##SBATCH --mem=256G
+#SBATCH --partition=gpumedium
 #SBATCH --gres=gpu:a100:4
 ##SBATCH --cpus-per-task=32
 
