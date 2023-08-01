@@ -20,8 +20,10 @@ srun python3 train.py \
   --validation_file data/dev.txt \
   --per_device_train_batch_size 1 \
   --per_device_eval_batch_size 1 \
+  --learning_rate 4e-5 \
   --do_train \
   --do_eval \
+  --evaluation_strategy steps \
   --output_dir tmp/ \
   --resume_from_checkpoint \
   --save_steps 10000
