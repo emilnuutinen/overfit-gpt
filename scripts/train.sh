@@ -4,10 +4,8 @@
 #SBATCH --time=36:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
-##SBATCH --mem=256G
 #SBATCH --partition=gpumedium
 #SBATCH --gres=gpu:a100:4
-##SBATCH --cpus-per-task=32
 
 module load pytorch/1.13
 
@@ -18,11 +16,12 @@ srun python3 train.py \
   --model_type gpt2 \
   --tokenizer_name model/ \
   --cache_dir cache/ \
-  --train_file big_file/all_files.txt \
+  --train_file data/train.txt \
+  --validation_file data/dev.txt \
   --per_device_train_batch_size 1 \
   --per_device_eval_batch_size 1 \
   --do_train \
   --do_eval \
   --output_dir tmp/ \
   --resume_from_checkpoint \
-  --save_steps 5000
+  --save_steps 10000
