@@ -26,4 +26,5 @@ srun python3 train.py \
   --evaluation_strategy steps \
   --eval_steps 10000 \
   --output_dir tmp/ \
-  --save_steps 10000
+  --save_steps 10000 \
+  --resume_from_checkpoint tmp/checkpoint-30000
