@@ -13,8 +13,8 @@ pip3 install -r requirements.txt
 
 srun python3 train.py \
   --overwrite_cache \
-  --model_type model/config.json \
-  --tokenizer_name model/ \
+  --model_type gpt2 \
+  --tokenizer_name Finnish-NLP/gpt2-finnish \
   --cache_dir cache/ \
   --train_file data/train.txt \
   --validation_file data/dev.txt \
@@ -29,4 +29,4 @@ srun python3 train.py \
   --save_steps 10000 \
   --num_train_epochs 10 \
   --save_total_limit 5 \
-  --resume_from_checkpoint tmp/checkpoint-460000
+  --resume_from_checkpoint tmp/checkpoint-150000

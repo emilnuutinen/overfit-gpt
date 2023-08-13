@@ -13,13 +13,13 @@ pip3 install -r requirements.txt
 
 srun python3 train.py \
   --overwrite_cache \
-  --model_type model/config.json \
-  --tokenizer_name model/ \
+  --model_type gpt2 \
+  --tokenizer_name Finnish-NLP/gpt2-finnish \
   --cache_dir cache/ \
   --train_file data/train.txt \
   --validation_file data/dev.txt \
-  --per_device_train_batch_size 8 \
-  --per_device_eval_batch_size 8 \
+  --per_device_train_batch_size 1 \
+  --per_device_eval_batch_size 1 \
   --learning_rate 4e-5 \
   --do_train \
   --do_eval \
