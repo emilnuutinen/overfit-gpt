@@ -27,6 +27,8 @@ from transformers.utils.versions import require_version
 
 logger = logging.getLogger(__name__)
 
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 
 @dataclass
 class ModelArguments:
@@ -106,6 +108,24 @@ class DataTrainingArguments:
         metadata={
             "help": "An optional input evaluation data file to evaluate the perplexity on (a text file)."},
     )
+    max_train_samples: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": (
+                "For debugging purposes or quicker training, truncate the number of training examples to this "
+                "value if set."
+            )
+        },
+    )
+    max_eval_samples: Optional[int] = field(
+        default=None,
+        metadata={
+            "help": (
+                "For debugging purposes or quicker training, truncate the number of evaluation examples to this "
+                "value if set."
+            )
+        },
+    )
     streaming: bool = field(default=False, metadata={
                             "help": "Enable streaming mode"})
     block_size: Optional[int] = field(
@@ -140,8 +160,9 @@ class DataTrainingArguments:
             require_version("datasets>=2.0.0",
                             "The streaming feature requires `datasets>=2.0.0`")
 
-         if self.dataset_name is None and self.train_file is None and self.validation_file is None:
-            raise ValueError("Need either a dataset name or a training/validation file.")
+        if self.dataset_name is None and self.train_file is None and self.validation_file is None:
+            raise ValueError(
+                "Need either a dataset name or a training/validation file.")
 
         else:
             if self.train_file is not None:
@@ -199,14 +220,12 @@ def main():
 
     # Set seed before initializing model.
     set_seed(training_args.seed)
-
     if data_args.dataset_name is not None:
         # Downloading and loading a dataset from the hub.
         raw_datasets = load_dataset(
             data_args.dataset_name,
             data_args.dataset_config_name,
             cache_dir=model_args.cache_dir,
-            token=model_args.token,
             streaming=data_args.streaming,
         )
         if "validation" not in raw_datasets.keys():
@@ -215,7 +234,6 @@ def main():
                 data_args.dataset_config_name,
                 split=f"train[:{data_args.validation_split_percentage}%]",
                 cache_dir=model_args.cache_dir,
-                token=model_args.token,
                 streaming=data_args.streaming,
             )
             raw_datasets["train"] = load_dataset(
@@ -223,7 +241,6 @@ def main():
                 data_args.dataset_config_name,
                 split=f"train[{data_args.validation_split_percentage}%:]",
                 cache_dir=model_args.cache_dir,
-                token=model_args.token,
                 streaming=data_args.streaming,
             )
     else:
@@ -245,7 +262,6 @@ def main():
             extension,
             data_files=data_files,
             cache_dir=model_args.cache_dir,
-            token=model_args.token,
             **dataset_args,
         )
         # If no validation data is there, validation_split_percentage will be used to divide the dataset.
@@ -255,7 +271,6 @@ def main():
                 data_files=data_files,
                 split=f"train[:{data_args.validation_split_percentage}%]",
                 cache_dir=model_args.cache_dir,
-                token=model_args.token,
                 **dataset_args,
             )
             raw_datasets["train"] = load_dataset(
@@ -263,7 +278,6 @@ def main():
                 data_files=data_files,
                 split=f"train[{data_args.validation_split_percentage}%:]",
                 cache_dir=model_args.cache_dir,
-                token=model_args.token,
                 **dataset_args,
             )
 
