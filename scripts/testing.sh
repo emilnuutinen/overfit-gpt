@@ -25,6 +25,7 @@ srun python3 train.py \
   --gradient_accumulation_steps 16 \
   --gradient_checkpointing True \
   --block_size 512 \
+  --optim adamw_torch \
   --learning_rate 4e-5 \
   --do_train \
   --do_eval \
