@@ -14,19 +14,20 @@ pip3 install -r requirements.txt
 srun python3 train.py \
   --overwrite_cache \
   --model_type gpt2 \
-  --tokenizer_name Finnish-NLP/gpt2-finnish \
+  --tokenizer_name TurkuNLP/gpt3-finnish-small \
+  --config_overrides="vocab_size=131072" \
   --cache_dir cache/ \
-  --train_file data/train.txt \
-  --validation_file data/dev.txt \
-  --per_device_train_batch_size 1 \
-  --per_device_eval_batch_size 1 \
+  --dataset_name graelo/wikipedia \
+  --dataset_config_name 20230601.fi \
+  --streaming True \
+  --per_device_train_batch_size 4 \
+  --per_device_eval_batch_size 4 \
   --learning_rate 4e-5 \
   --do_train \
   --do_eval \
   --evaluation_strategy steps \
-  --eval_steps 10000 \
-  --output_dir tmp/ \
+  --eval_steps 50000 \
+  --output_dir tmp_new/ \
   --save_steps 10000 \
-  --num_train_epochs 50 \
+  --num_train_epochs 200 \
   --save_total_limit 5 \
-  --resume_from_checkpoint tmp/checkpoint-450000

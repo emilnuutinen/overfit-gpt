@@ -14,7 +14,7 @@ pip3 install -r requirements.txt
 srun python3 train.py \
   --overwrite_cache \
   --model_type gpt2 \
-  --tokenizer_name Finnish-NLP/gpt2-finnish \
+  --tokenizer_name TurkuNLP/gpt3-finnish-small \
   --cache_dir cache/ \
   --train_file data/train.txt \
   --validation_file data/dev.txt \
@@ -25,8 +25,7 @@ srun python3 train.py \
   --do_eval \
   --evaluation_strategy steps \
   --eval_steps 10000 \
-  --output_dir tmp/ \
+  --output_dir tmp_bloom/ \
   --save_steps 10000 \
-  --num_train_epochs 50 \
+  --num_train_epochs 10 \
   --save_total_limit 5 \
-  --resume_from_checkpoint tmp/checkpoint-450000
