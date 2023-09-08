@@ -20,11 +20,11 @@ srun python3 train.py \
   --dataset_name graelo/wikipedia \
   --dataset_config_name 20230601.fi \
   --preprocessing_num_workers 4 \
-  --per_device_train_batch_size 2 \
-  --per_device_eval_batch_size 2 \
-  --gradient_accumulation_steps 16 \
+  --per_device_train_batch_size 1 \
+  --per_device_eval_batch_size 1 \
+  --gradient_accumulation_steps 4 \
   --gradient_checkpointing True \
-  --block_size 512 \
+  --block_size 256 \
   --optim adamw_torch \
   --learning_rate 4e-5 \
   --do_train \
