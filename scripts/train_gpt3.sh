@@ -21,8 +21,8 @@ srun python3 run_clm.py \
   --dataset_name graelo/wikipedia \
   --dataset_config_name 20230601.fi \
   --preprocessing_num_workers 32 \
-  --per_device_train_batch_size 6 \
-  --per_device_eval_batch_size 6 \
+  --per_device_train_batch_size 4 \
+  --per_device_eval_batch_size 4 \
   --gradient_accumulation_steps 4 \
   --learning_rate 4e-5 \
   --optim adamw_torch \
