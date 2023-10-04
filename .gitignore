@@ -3,3 +3,5 @@ fi_corpus/
 fiwiki_0723/
 cache/
 data/
+.venv/
+.python-version
