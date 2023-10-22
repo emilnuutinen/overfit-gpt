@@ -71,7 +71,8 @@ def predict(data):
         splitted = split_text(sample, 450, True)
         prompt = splitted[0]
         truth = splitted[1]
-        prediction = generator(prompt, max_new_tokens=50)[0]['generated_text']
+        prediction = generator(prompt, max_new_tokens=50, return_full_text=False)[
+            0]['generated_text']
         if score(prediction, truth):
             correct += 1
     return total, correct
