@@ -1,8 +1,14 @@
+import argparse
+
 from datasets import load_dataset
 from transformers import AutoTokenizer, pipeline, set_seed
 
-tokenizer = AutoTokenizer.from_pretrained("Finnish-NLP/gpt2-finnish")
-model = pipeline('text-generation', model='Finnish-NLP/gpt2-finnish')
+parser = argparse.ArgumentParser()
+parser.add_argument('--model', help='Model to use')
+parser.add_argument('--tokenizer', help='Tokenizer to use')
+args = parser.parse_args()
+tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+generator = pipeline('text-generation', model=args.model)
 wiki = load_dataset("graelo/wikipedia", "20230601.fi")
 
 set_seed(0)
@@ -21,7 +27,7 @@ def collect_data(dataset):
     return splits
 
 
-def split_text(text, max_chunk_length=500):
+def split_text(text, max_chunk_length=500, include_partials=False):
     # Tokenize the input text
     tokens = tokenizer.encode(text, add_special_tokens=False)
 
@@ -40,8 +46,8 @@ def split_text(text, max_chunk_length=500):
             current_length = 0
 
     # Append the last chunk if it's not empty
-#    if current_chunk:
-#        chunks.append(current_chunk)
+    if current_chunk and include_partials:
+        chunks.append(current_chunk)
 
     # Decode each chunk back into text
     chunked_text = [tokenizer.decode(
@@ -59,8 +65,16 @@ def flatten(matrix):
 
 # Loop through these examples and use `len-50` as prompt and predict 50 tokens
 def predict(data):
-    # model(prompt, min_new_tokens=50, max_new_tokens=50)
-    return f"Final samples: {len(data)}"
+    total = len(data)
+    correct = 0
+    for sample in data:
+        splitted = split_text(sample, 450, True)
+        prompt = splitted[0]
+        truth = splitted[1]
+        prediction = generator(prompt, max_new_tokens=50)[0]['generated_text']
+        if score(prediction, truth):
+            correct += 1
+    return total, correct
 
 
 # If the model correctly predicts the 50 tokens we give score 1, otherwise 0
@@ -77,7 +91,9 @@ def average(total: int, correct: int) -> float:
 def main():
     data = collect_data(wiki["train"])
     flattened = flatten(data)
-    print(predict(flattened))
+    total, correct = predict(flattened)
+    final_score = average(total, correct)
+    print(f"Fraction extractable: {final_score}")
 
 
 if __name__ == "__main__":
