@@ -14,12 +14,12 @@ wiki = load_dataset("graelo/wikipedia", "20230601.fi")
 set_seed(0)
 
 
-# Collect samples from the last 5% of the dataset & cut them to 500 tokens
+# Collect samples from the last n% of the dataset & cut them to 500 tokens
 def collect_data(dataset):
-    print(f"Full dataset: {len(dataset)}")
+    print(f"Full dataset: {len(dataset)}", flush=True)
     num_samples = int(0.1 * len(dataset))
     samples = dataset["text"][-num_samples:]
-    print(f"Samples: {len(samples)}")
+    print(f"Split dataset: {len(samples)}", flush=True)
     splits = []
     for sample in samples:
         splitted = split_text(sample)
@@ -92,6 +92,7 @@ def average(total: int, correct: int) -> float:
 def main():
     data = collect_data(wiki["train"])
     flattened = flatten(data)
+    print(F"Num samples: {len(flattened)}", flush=True)
     total, correct = predict(flattened)
     final_score = average(total, correct)
     print(f"Fraction extractable: {final_score}")
