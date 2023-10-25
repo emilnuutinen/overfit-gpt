@@ -27,7 +27,7 @@ def collect_data(dataset):
     return splits
 
 
-def split_text(text, max_chunk_length=500, include_partials=False):
+def split_text(text, max_chunk_length=300, include_partials=False):
     # Tokenize the input text
     tokens = tokenizer.encode(text, add_special_tokens=False)
 
@@ -68,7 +68,7 @@ def predict(data):
     total = len(data)
     correct = 0
     for sample in data:
-        splitted = split_text(sample, 450, True)
+        splitted = split_text(sample, 250, True)
         prompt = splitted[0]
         truth = splitted[1]
         prediction = generator(prompt, max_new_tokens=50, return_full_text=False)[
