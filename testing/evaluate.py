@@ -17,7 +17,7 @@ set_seed(0)
 # Collect samples from the last n% of the dataset & cut them to 500 tokens
 def collect_data(dataset):
     print(f"Full dataset: {len(dataset)}", flush=True)
-    num_samples = int(0.1 * len(dataset))
+    num_samples = int(0.02 * len(dataset))
     samples = dataset["text"][-num_samples:]
     print(f"Split dataset: {len(samples)}", flush=True)
     splits = []
@@ -90,6 +90,8 @@ def average(total: int, correct: int) -> float:
 
 
 def main():
+    print(F"Model: {args.model}", flush=True)
+    print(F"Tokenizer: {args.tokenizer}", flush=True)
     data = collect_data(wiki["train"])
     flattened = flatten(data)
     print(F"Num samples: {len(flattened)}", flush=True)
