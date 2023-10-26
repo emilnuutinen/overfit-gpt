@@ -14,10 +14,10 @@ wiki = load_dataset("graelo/wikipedia", "20230601.fi")
 set_seed(0)
 
 
-# Collect samples from the last n% of the dataset & cut them to 500 tokens
+# Collect samples from the last {n}% of the dataset & cut them to {m} tokens
 def collect_data(dataset):
     print(f"Full dataset: {len(dataset)}", flush=True)
-    num_samples = int(0.02 * len(dataset))
+    num_samples = int(0.05 * len(dataset))
     samples = dataset["text"][-num_samples:]
     print(f"Split dataset: {len(samples)}", flush=True)
     splits = []
@@ -27,7 +27,7 @@ def collect_data(dataset):
     return splits
 
 
-def split_text(text, max_chunk_length=300, include_partials=False):
+def split_text(text, max_chunk_length=500, include_partials=False):
     # Tokenize the input text
     tokens = tokenizer.encode(text, add_special_tokens=False)
 
@@ -68,10 +68,10 @@ def predict(data):
     total = len(data)
     correct = 0
     for sample in data:
-        splitted = split_text(sample, 250, True)
+        splitted = split_text(sample, 499, True)
         prompt = splitted[0]
         truth = splitted[1]
-        prediction = generator(prompt, max_new_tokens=50, return_full_text=False)[
+        prediction = generator(prompt, max_new_tokens=1, return_full_text=False)[
             0]['generated_text']
         if score(prediction, truth):
             correct += 1
