@@ -69,6 +69,8 @@ def predict(data):
     correct = 0
     for sample in data:
         splitted = split_text(sample, 499, True)
+        if len(splitted) != 2:
+            continue
         prompt = splitted[0]
         truth = splitted[1]
         prediction = generator(prompt, max_new_tokens=1, return_full_text=False)[
