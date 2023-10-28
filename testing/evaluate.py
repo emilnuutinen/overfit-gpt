@@ -15,7 +15,7 @@ set_seed(0)
 
 
 # Collect samples from the last {n}% of the dataset & cut them to {m} tokens
-def collect_data(dataset):
+def collect_data(dataset: dict) -> list:
     print(f"Full dataset: {len(dataset)}", flush=True)
     num_samples = int(0.05 * len(dataset))
     samples = dataset["text"][-num_samples:]
@@ -27,7 +27,10 @@ def collect_data(dataset):
     return splits
 
 
-def split_text(text, max_chunk_length=500, include_partials=False):
+def split_text(text: str,
+               max_chunk_length: int = 500,
+               include_partials: bool = False
+               ) -> list:
     # Tokenize the input text
     tokens = tokenizer.encode(text, add_special_tokens=False)
 
@@ -56,7 +59,7 @@ def split_text(text, max_chunk_length=500, include_partials=False):
     return chunked_text
 
 
-def flatten(matrix):
+def flatten(matrix: list) -> list:
     flat_list = []
     for row in matrix:
         flat_list += row
@@ -64,7 +67,7 @@ def flatten(matrix):
 
 
 # Loop through these examples and use `len-50` as prompt and predict 50 tokens
-def predict(data):
+def predict(data: list) -> tuple[int, int]:
     total = len(data)
     correct = 0
     for sample in data:
