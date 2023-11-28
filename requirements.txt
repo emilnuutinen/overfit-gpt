@@ -7,3 +7,4 @@ evaluate
 scikit-learn
 nltk
 transformers
+jsonlines
