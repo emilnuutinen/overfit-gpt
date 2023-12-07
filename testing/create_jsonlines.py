@@ -6,7 +6,7 @@ from transformers import AutoTokenizer, pipeline, set_seed
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", help="Model to use")
 parser.add_argument("--tokenizer", help="Tokenizer to use")
-parser.add_argument("--data", help="Tokenizer to use")
+parser.add_argument("--filename", help="Save location")
 args = parser.parse_args()
 tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 generator = pipeline("text-generation", model=args.model)
@@ -86,7 +86,7 @@ def create_jsonlines(data: list):
             "generated": generation,
         }
         id += 1
-        with jsonlines.open(f"{args.model}_test_450_50.jsonl", mode="a") as writer:
+        with jsonlines.open(f"{args.filename}.jsonl", mode="a") as writer:
             writer.write(line)
 
 
