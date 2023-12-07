@@ -71,7 +71,7 @@ def flatten(matrix: list) -> list:
 def create_jsonlines(data: list):
     id = 0
     for sample in data:
-        splitted = split_text(sample, 450, False)
+        splitted = split_text(sample, 450, True)
         if len(splitted) != 2:
             continue
         prompt = splitted[0]
