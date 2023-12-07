@@ -20,7 +20,7 @@ def collect_data(dataset) -> list:
     samples = []
     with jsonlines.open(dataset, mode="r") as reader:
         for line in reader:
-            samples.append(line["chunk"])
+            samples.append(line["chunk"][0])
     splits = []
     for sample in samples:
         splitted = split_text(sample)
