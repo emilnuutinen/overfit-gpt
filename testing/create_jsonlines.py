@@ -28,21 +28,22 @@ def collect_data(dataset) -> list:
     return splits
 
 
-def split_text(text: str, include_partials: bool = False) -> list:
+def split_text(
+    text: str, max_chunk_length: int = 500, include_partials: bool = False
+) -> list:
     # Tokenize the input text
     tokens = tokenizer.encode(text, add_special_tokens=False)
 
     # Initialize variables to keep track of chunks
     chunks = []
     current_chunk = []
-    chunk_length = len(tokens)
     current_length = 0
 
     for token in tokens:
         current_chunk.append(token)
         current_length += 1
 
-        if current_length >= chunk_length-50:
+        if current_length >= max_chunk_length:
             chunks.append(current_chunk)
             current_chunk = []
             current_length = 0
@@ -70,7 +71,7 @@ def flatten(matrix: list) -> list:
 def create_jsonlines(data: list):
     id = 0
     for sample in data:
-        splitted = split_text(sample, True)
+        splitted = split_text(sample, 450, False)
         if len(splitted) != 2:
             continue
         prompt = splitted[0]
@@ -85,7 +86,7 @@ def create_jsonlines(data: list):
             "generated": generation,
         }
         id += 1
-        with jsonlines.open(f'{args.model}_max_50.jsonl', mode='a') as writer:
+        with jsonlines.open(f"{args.model}_test_450_50.jsonl", mode="a") as writer:
             writer.write(line)
 
 
