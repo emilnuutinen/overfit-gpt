@@ -1,26 +1,26 @@
 import argparse
 
 import jsonlines
-from datasets import load_dataset
 from transformers import AutoTokenizer, pipeline, set_seed
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--model", help="Model to use")
 parser.add_argument("--tokenizer", help="Tokenizer to use")
+parser.add_argument("--filename", help="Save location")
 args = parser.parse_args()
 tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 generator = pipeline("text-generation", model=args.model)
-wiki = load_dataset("graelo/wikipedia", "20230601.fi")
+dataset = "clean.jsonl"
 
 set_seed(0)
 
 
 # Collect samples from the last {n}% of the dataset & cut them to {m} tokens
-def collect_data(dataset: dict) -> list:
-    print(f"Full dataset: {len(dataset)}", flush=True)
-    num_samples = int(0.05 * len(dataset))
-    samples = dataset["text"][-num_samples:]
-    print(f"Split dataset: {len(samples)}", flush=True)
+def collect_data(dataset) -> list:
+    samples = []
+    with jsonlines.open(dataset, mode="r") as reader:
+        for line in reader:
+            samples.append(line["chunk"][0])
     splits = []
     for sample in samples:
         splitted = split_text(sample)
@@ -86,14 +86,14 @@ def create_jsonlines(data: list):
             "generated": generation,
         }
         id += 1
-        with jsonlines.open(f'{args.model}_450_50.jsonl', mode='a') as writer:
+        with jsonlines.open(f"{args.filename}.jsonl", mode="a") as writer:
             writer.write(line)
 
 
 def main():
     print(f"Model: {args.model}", flush=True)
     print(f"Tokenizer: {args.tokenizer}", flush=True)
-    data = collect_data(wiki["train"])
+    data = collect_data(dataset)
     flattened = flatten(data)
     print(f"Num samples: {len(flattened)}", flush=True)
     create_jsonlines(flattened)
