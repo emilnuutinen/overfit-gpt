@@ -15,7 +15,7 @@ dataset = "clean.jsonl"
 set_seed(0)
 
 
-# Collect samples from the last {n}% of the dataset & cut them to {m} tokens
+# Collect samples from the jsonlines file
 def collect_data(dataset) -> list:
     samples = []
     with jsonlines.open(dataset, mode="r") as reader:
