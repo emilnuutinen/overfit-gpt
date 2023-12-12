@@ -107,7 +107,8 @@ class ModelArguments:
 class DataTrainingArguments:
     dataset_name: Optional[str] = field(
         default=None,
-        metadata={"help": "The name of the dataset to use (via the datasets library)."},
+        metadata={
+            "help": "The name of the dataset to use (via the datasets library)."},
     )
     dataset_config_name: Optional[str] = field(
         default=None,
@@ -142,7 +143,8 @@ class DataTrainingArguments:
             )
         },
     )
-    streaming: bool = field(default=False, metadata={"help": "Enable streaming mode"})
+    streaming: bool = field(default=False, metadata={
+                            "help": "Enable streaming mode"})
     block_size: Optional[int] = field(
         default=None,
         metadata={
@@ -169,7 +171,8 @@ class DataTrainingArguments:
     )
     keep_linebreaks: bool = field(
         default=True,
-        metadata={"help": "Whether to keep line breaks when using TXT files or not."},
+        metadata={
+            "help": "Whether to keep line breaks when using TXT files or not."},
     )
 
     def __post_init__(self):
@@ -309,7 +312,8 @@ def main():
         )
 
     model = AutoModelForCausalLM.from_config(config)
-    n_params = sum({p.data_ptr(): p.numel() for p in model.parameters()}.values())
+    n_params = sum({p.data_ptr(): p.numel()
+                   for p in model.parameters()}.values())
     logger.info(
         f"Training new model from scratch - Total size={n_params/2**20:.2f}M params"
     )
@@ -380,17 +384,18 @@ def main():
     # generate chunks of block_size.
     def group_texts(examples):
         # Concatenate all texts.
-        concatenated_examples = {k: list(chain(*examples[k])) for k in examples.keys()}
+        concatenated_examples = {
+            k: list(chain(*examples[k])) for k in examples.keys()}
         total_length = len(concatenated_examples[list(examples.keys())[0]])
         # Drop the small remainder, and if the total_length < block_size, exclude
         # this batch and return an empty dict.
         total_length = (total_length // block_size) * block_size
         # Split by chunks of max_len.
         result = {
-            k: [t[i : i + block_size] for i in range(0, total_length, block_size)]
+            k: [t[i: i + block_size]
+                for i in range(0, total_length, block_size)]
             for k, t in concatenated_examples.items()
         }
-        result["labels"] = result["input_ids"].copy()
         return result
 
     # Note that with `batched=True`, this map processes 1,000 texts together, so
@@ -417,7 +422,8 @@ def main():
             raise ValueError("--do_train requires a train dataset")
         train_dataset = lm_datasets["train"]
         if data_args.max_train_samples is not None:
-            max_train_samples = min(len(train_dataset), data_args.max_train_samples)
+            max_train_samples = min(
+                len(train_dataset), data_args.max_train_samples)
             train_dataset = train_dataset.select(range(max_train_samples))
 
     if training_args.do_eval:
@@ -425,7 +431,8 @@ def main():
             raise ValueError("--do_eval requires a validation dataset")
         eval_dataset = lm_datasets["validation"]
         if data_args.max_eval_samples is not None:
-            max_eval_samples = min(len(eval_dataset), data_args.max_eval_samples)
+            max_eval_samples = min(
+                len(eval_dataset), data_args.max_eval_samples)
             eval_dataset = eval_dataset.select(range(max_eval_samples))
 
         def preprocess_logits_for_metrics(logits, labels):
