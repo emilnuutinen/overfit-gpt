@@ -16,7 +16,7 @@ srun python3 train.py \
   --overwrite_cache \
   --model_type gpt2 \
   --tokenizer_name TurkuNLP/gpt3-finnish-small \
-  --config_overrides="vocab_size=131072" \
+  --config_overrides="vocab_size=131072,attn_pdrop=0.0,embd_pdrop=0.0,resid_pdrop=0.0,summary_first_dropout=0.0" \
   --cache_dir cache/ \
   --dataset_name graelo/wikipedia \
   --dataset_config_name 20230601.fi \
